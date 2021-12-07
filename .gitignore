@@ -3,3 +3,4 @@
 /config/host
 /scripts/config.py
 /bk/*
+**/__pycache__/
