@@ -1,0 +1,9 @@
+[all]
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222
+192.3.2.1 ansible_ssh_user=root ansible_ssh_pass=pswd ansible_ssh_port=2222

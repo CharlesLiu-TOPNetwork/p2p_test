@@ -1,0 +1,5 @@
+/config/all_node_info.json
+/config/all/*
+/config/host
+/scripts/config.py
+/bk/*
