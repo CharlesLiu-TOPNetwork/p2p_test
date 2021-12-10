@@ -17,7 +17,7 @@ if __name__ == "__main__":
     if yesno != 'y' and yesno != 'Y':
         sys.exit(-1)
 
-    cmd = "ansible -i {0} all -m shell -a \"cd /tmp/p2p_test/ && python3 stop.py\"".format(
+    cmd = "ansible -i {0} all -f 6 -m shell -a \"cd /tmp/p2p_test/ && python3 stop.py\"".format(
         host_file)
     print(cmd)
     os.system(cmd)

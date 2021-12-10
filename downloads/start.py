@@ -19,37 +19,43 @@ def get_local_ip():
 
 
 def clear_log_db(log_base='./log', db_base='./db'):
+    local_ip = get_local_ip()
+
     rmlog_cmd = 'find {0} -name xtop*.log |xargs rm -f'.format(log_base)
     print(rmlog_cmd)
     os.system(rmlog_cmd)
 
-    mkdirlog_cmd = 'mkdir -p {0}'.format(log_base)
+    mkdirlog_cmd = r"find config/ -name '" + local_ip + r"*' | awk -F '_' '{print $2}' | awk -F '.' '{print $1}' | xargs -I dcnt sh -c 'mkdir -p ./log/dcnt' "
+    # mkdirlog_cmd = 'mkdir -p {0}'.format(log_base)
     os.system(mkdirlog_cmd)
 
-    touchlog_cmd = 'touch {0}/xtop.log'.format(log_base)
-    print(touchlog_cmd)
+    touchlog_cmd = r"find config/ -name '" + local_ip + r"*' | awk -F '_' '{print $2}' | awk -F '.' '{print $1}' | xargs -I dcnt sh -c 'touch ./log/dcnt/xtop.log' "
+    # touchlog_cmd = 'touch {0}/xtop.log'.format(log_base)
+    # print(touchlog_cmd)
     os.system(touchlog_cmd)
 
     rmdb_cmd = 'rm -rf {0}/*'.format(db_base)
     print(rmdb_cmd)
     os.system(rmdb_cmd)
 
-    mkdirdb_cmd = 'mkdir -p {0}'.format(db_base)
+    mkdirdb_cmd = r"find config/ -name '" + local_ip + r"*' | awk -F '_' '{print $2}' | awk -F '.' '{print $1}' | xargs -I dcnt sh -c 'mkdir -p ./db/dcnt' "
+    # mkdirdb_cmd = 'mkdir -p {0}'.format(db_base)
     os.system(mkdirdb_cmd)
 
 
 def start():
     local_ip = get_local_ip()
-    config_file = './config/all/{0}.config'.format(local_ip)
-    print("run xelect_net_demo using config:{0}".format(config_file))
+    # config_file = './config/all/{0}.config'.format(local_ip)
+    # print("run xelect_net_demo using config:{0}".format(config_file))
 
-    if not os.path.exists(config_file):
-        print('{0} not exist'.format(config_file))
-        return False
+    # if not os.path.exists(config_file):
+    #     print('{0} not exist'.format(config_file))
+    #     return False
 
-    cmd = './xelect_net_demo -c {0} -g 0 &'.format(config_file)
-    print(cmd)
-    os.system(cmd)
+    mkdirdb_cmd = r"find config/ -name '" + local_ip + r"*' | xargs -I conf sh -c './xelect_net_demo -c conf -g 0 & ' "
+    # cmd = './xelect_net_demo -c {0} -g 0 &'.format(config_file)
+    print(mkdirdb_cmd)
+    os.system(mkdirdb_cmd)
     return True
 
 

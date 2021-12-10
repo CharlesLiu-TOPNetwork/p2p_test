@@ -72,11 +72,11 @@ def load_all_node_info(filename = "./all_node_info.json"):
     return account_list
 
 
-def update_config(account, ip, public_endpoints):
+def update_config(account, ip, public_endpoints,delta):
     local_ip = get_local_ip()
     local_ip = ip
     log = {
-            "path": "./log/xtop.log",
+            "path": "./log/"+str(delta)+"/xtop.log",
             "off": "false",
             "debug": "false",
             }
@@ -89,16 +89,17 @@ def update_config(account, ip, public_endpoints):
             "public_endpoints": public_endpoints,
             "show_cmd": "false",
             "node_id": account,
+            "delta" : delta
             }
 
     db = {
-            "path": "./db",
+            "path": "./db/"+str(delta),
             }
 
     elect = {
             }
 
-    node_config_file = './config/all/{0}.config'.format(local_ip)
+    node_config_file = './config/all/{0}_{1}.config'.format(local_ip,delta)
 
     with open(node_config_file, 'w') as fout:
         dump_field("log", fout, log)
@@ -106,22 +107,37 @@ def update_config(account, ip, public_endpoints):
         dump_field("db", fout, db)
         fout.close()
 
-def generate_all_node_config():
+def generate_all_node_config(mul:int):
     # global run_mode
 
     account_list = load_all_node_info(filename = "./config/all_node_info.json")
     # if run_mode == 'dist':
     ip_list      = load_all_host(filename = "./config/host")
-    if len(ip_list) != len(account_list) or len(ip_list) == 0:
-        print("ip_list.length is {0} not equal account_list:{1}, please generate all_node_info again using the right number".format(len(ip_list), len(account_list)))
+    if len(ip_list)*mul != len(account_list) or len(ip_list) == 0:
+        print("ip_list.length: {0} * mul: {1} is not equal account_list:{2}, please generate all_node_info again using the right number".format(mul, len(ip_list), len(account_list)))
         return False
 
     public_endpoints = '{0}:9126,{1}:9126,{2}:9126,{3}:9126'.format(ip_list[0], ip_list[1], ip_list[2], ip_list[3])
-    for i in range(0, len(account_list)):
-        account = account_list[i]
-        ip      = ip_list[i]
-        update_config(account, ip, public_endpoints)
-        print("generate config for node ip:{0} ok".format(ip))
+    
+
+    # 10 ip  
+    # 30 account 
+    # 3 mul
+    # one ip three account 
+
+    for index in range(0,len(ip_list)):
+        for delta in range(0, mul):
+            ip = ip_list[index]
+            account_index = index * mul + delta; 
+            account = account_list[account_index]
+            update_config(account,ip,public_endpoints,delta)
+            print("generate config for node ip:{0} delta: {1} ok".format(ip,delta))
+
+    # for i in range(0, len(account_list)):
+    #     account = account_list[i]
+    #     ip      = ip_list[i]
+    #     update_config(account, ip, public_endpoints)
+    #     print("generate config for node ip:{0} ok".format(ip))
 
     print("generate {0} config file, saved in config/all dir".format(len(account_list)))
     return True
@@ -173,14 +189,14 @@ def check_require(static_network_config_file = "./config/static_network.config")
 
     return True
 
-def init_deploy():
+def init_deploy(mul: int):
     mkconf('./config')
     mkconf('./config/all')
-    mkconf('./log')
+    # mkconf('./log')
 
     static_network_config_file = "./config/static_network.config"
     if check_require(static_network_config_file = static_network_config_file):
-        generate_all_node_config()
+        generate_all_node_config(mul)
     return
 
 
@@ -235,6 +251,7 @@ if __name__ == "__main__":
     parser.description='xelect_net_demo 运维工具，支持根据 host 文件生成所有节点的 config 文件；支持启动、终止、重启 xelect_net_demo 等'
     # parser.add_argument('-m',   '--mode',      type=str,  help='run mode: cent[ral] for deploy multi-nodes in local-machine; dist[ributed] for deploy multi-nodes in distributed-machines', choices = ['cent', 'dist'], required=True)
     parser.add_argument('-i',   '--init',      type=str,  help='only using this in proxy-host(jump-host) to generate all config files', default='false')
+    parser.add_argument('-m',   '--multi',      type=int,  help='how many demo runs in one node', default=1)
     parser.add_argument('-s',   '--start',     type=str,  help="start xelect_net_demo", default='false')
     parser.add_argument('-r',   '--restart',   type=str,  help="restart xelect_net_demo", default='false')
     parser.add_argument('-k',   '--kill',      type=str,  help="kill   xelect_net_demo", default='false')
@@ -250,7 +267,7 @@ if __name__ == "__main__":
 
     if args.init == 'true':
         #just run in proxy machine
-        init_deploy()
+        init_deploy(args.multi)
         sys.exit(0)
 
     if args.start == 'true':
