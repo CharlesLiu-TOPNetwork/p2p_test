@@ -5,6 +5,7 @@
 * change `./config/static_network_config` file, depends on what the net size that you want to build.
 * RUN commands:
 ``` BASH
+rm -rf config/all*
 ./downloads/xelect_net_demo -c ./config/static_network.config -x
 python3 update_config.py -i true -m 8
 # -m means how may nodes in every machine.
