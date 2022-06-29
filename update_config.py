@@ -117,7 +117,11 @@ def generate_all_node_config(mul:int):
         print("ip_list.length: {0} * mul: {1} is not equal account_list:{2}, please generate all_node_info again using the right number".format(mul, len(ip_list), len(account_list)))
         return False
 
-    public_endpoints = '{0}:9126,{1}:9126,{2}:9126,{3}:9126'.format(ip_list[0], ip_list[1], ip_list[2], ip_list[3])
+    if len(ip_list) <= 1:
+        #local:
+        public_endpoints = '{0}:9126'.format(ip_list[0])
+    else:
+        public_endpoints = '{0}:9126,{1}:9126,{2}:9126,{3}:9126'.format(ip_list[0], ip_list[1], ip_list[2], ip_list[3])
     
 
     # 10 ip  

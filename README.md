@@ -13,17 +13,43 @@ python3 update_config.py -i true -m 8
 # m * len(host) = len(address)
 
 ```
-### build net:
+
+### alternative
+* use debug version to get more logs:
+    * `downloads/xelect_net_demo_dbg`
+    * `deploy_local.sh:20-22`
+    * `update_config.py:81`: `debug:true`
+* local test or remote test:
+    * reference: below `### local test` and `### ansible test`
+
+### local test
+
+* use config/local.host.sample to generate configs
+* run local shell script:
+
+``` BASH
+bash -x deploy_local.sh
+```
+### ansible test
+
+##### build net:
+
 ``` BASH
 python3 scripts/ansible_files.py config/host
 python3 scripts/ansible_start.py config/host
 ```
 
+##### start agent:
 
-### start agent:
 ``` BASH
 python3 scripts/ansible_agent_start.py config/host
 ```
+##### stop:
+
+``` BASH
+python3 scripts/ansible_stop.py config/host
+```
+
 
 ### send command:
 based on TopPyFrame
@@ -77,10 +103,7 @@ $ python3 testapp.py p2ptest "broadcast_all 3 199"
 
 * NOTED: remember to change env.ini ip && port
 
-### stop:
-``` BASH
-python3 scripts/ansible_stop.py config/host
-```
+
 ### NOTED:
 * The `xelect_net_demo` , aka `p2p test demo`, use port 9126 as communication port, and port 10125 as grpc port (to recv commands)
 * IF every nodes runs more than one demo, than it will use `9126 + delta`, `10125 + delta` port , delta range from `0` to `n - 1`
